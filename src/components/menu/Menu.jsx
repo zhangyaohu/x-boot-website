@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
-import { update_menu } from '../../store/actions/menuAction';
+import { update_menu, reload_menu } from '../../store/actions/menuAction';
 import style from './menu.less';
 import {Icon} from 'antd';
 
@@ -13,44 +13,69 @@ class Menu extends Component{
 		 }
 	 }
 	 
-	 updateMenu = () => {
-
+	 
+	 changeRoute = (item, event) => {
+     event.stopPropagation() 
+		 if(item.type === 'link') {
+      this.props.histroy.push(item.path);
+     }
+     this.props.updateMenu(item);
+     let newMenuList = this.props.menuList;
+     this.setState({
+      menuList: newMenuList
+    })
 	 }
 	 
-	 changeRoute = (item) => {
-		 if(item.type === 'button') return;
-		 if(item.type === 'link') 
-		 this.props.histroy.push(item.path);
+	 isActive = (item) => {
+	  return this.props.histroy.location.pathname ===  item.path
 	 }
 
 	 getDom = (menuList) => {
 		 return menuList.map((item, index) => {
-			return  (<div key={index}>
-					{ 
-					item.children.length === 0 
-					?
-					(
-				  item.type === 'button' ? 
-					<div className={style[`menu_item_1`],style.menu_item}>
-							<Icon type={item.icon}/>	
-							 {item.title}
-					</div> 
-					: 
-					<div onClick={this.changeRoute(item)} className={style[`menu_item_1`],style.menu_item}>
-				   	<Icon type={item.icon}/>	 {item.title}
-				   </div> 
-					)
-					: 
-					this.getDom(item.children)}
-			</div>)
+			return (
+			  <ul key={index} className={style.menu_item}>
+				{
+          item.children.length === 0
+          ?
+          <li onClick={this.changeRoute.bind(this,item)} className={[style.menu_item_1,`${this.isActive(item) ? style.active : style.no_active}`].join(' ')}>
+            <Icon type={item.icon} className={style.icon}/>
+            <h4 className={style.menu_item_title}>{item.title}</h4>
+          </li>
+          : 
+          (
+            item.type === 'button'
+            ?
+            <div>
+              <li className={[style.menu_item_children,style.menu_item_1,`${item.isActive ? style.active : style.no_active}`].join(' ')} 
+                onClick={this.changeRoute.bind(this,item)}>
+                <Icon type={item.icon} className={style.icon}/>
+                <h4 className={style.menu_item_title}>{item.title}</h4>
+                <Icon type={item.isCollpse ? 'up' : 'down'} className={style.down_up}/>
+              </li>
+              <li className={item.isCollpse ? style.show : style.hidden} style={{'paddingLeft': '15px'}}>
+               { this.getDom(item.children)}
+              </li>
+            </div>
+            :
+            null
+          )
+				}
+			  </ul>
+			)
 		 })
-	 }
+   }
+  
+   componentDidMount() {
+    this.props.reloadMenu(this.props.histroy.location.pathname);
+     this.setState({
+       menuList: this.props.menuList
+     })
+   } 
 	 render () {
-		 let {menuList} = this.props;
 		 return (
 	     <div className={style.menu}>
 				 {
-           this.getDom(menuList)
+           this.getDom(this.state.menuList)
 				 }
 			 </div>
 		 )
@@ -58,21 +83,22 @@ class Menu extends Component{
 }
 
 const mapStateToProps = (state) => {
-	console.log(state);
 	return {
     menuList: state.menuList
 	}
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownerProps) => {
   return {
-		updateMenu: dispatch(update_menu('update_menu'))
+    updateMenu: (item) => dispatch(update_menu({type: 'update_menu', item})),
+    reloadMenu: (item) => dispatch(reload_menu({type: 'reload_menu', item}))
 	}
 }
 
 Menu.propTypes = {
   menuList: PropTypes.array.isRequired,
-  updateMenu: PropTypes.object.isRequired
+  updateMenu: PropTypes.func,
+  reloadMenu: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

@@ -19,7 +19,7 @@ html, body, #root{
 
 @charset "utf-8";
 /* CSS Document */
-body, p, h1, h2, h3, h4, h5, h6, form, fieldset, table, td, img, div, dl, dt, dd, input {
+body, p, h1, h2, h3, h4, h5, h6, form, fieldset, table, td, img, div, dl, dt, dd, input, ul, li {
     margin: 0;
     padding: 0;
 }
@@ -71,11 +71,36 @@ body {
     background: #eee;
 }
 
+li{
+    list-style: none;
+}
 
+.page-toolbar{
+    padding: 10px 30px;
+    border-bottom: 1px solid #f2f2f2;
+    display: flex;
+    justify-content: space-between;
+}
 
+.page-container{
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding: 20px;
+}
 
+.x-boot-btn{
+ margin-right: 10px;
+}
 
+.page-toolbar-right{
+  flex: 1 1 auto;
+  text-align: right;
+}
 
+.page-toolbar-left{
+ flex: 1 1 auto;
+}
 
 
 
