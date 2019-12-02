@@ -1,6 +1,8 @@
 import menuReducer from './muneReducers';
+import httpReducers from './httpReducers';
 
 
 export default {
-	menuList: menuReducer
+	menuList: menuReducer,
+	httpReducers: httpReducers
 }

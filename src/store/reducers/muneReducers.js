@@ -3,7 +3,7 @@ let initState = {
     {
       path: '/home',
       type: 'link',
-      title: 'home',
+      title: '首页',
       icon: 'home',
       isCollpse: false,
       isActive: false,
