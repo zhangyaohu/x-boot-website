@@ -5,20 +5,20 @@ import {AppContainer} from 'react-hot-loader';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './store/index.js';
-import RouteIndex from './route/index.js'
-import {LocaleProvider} from 'antd';
+import RouteIndex from './route/index.js';
+import {ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
 
 const store = configureStore();
 
 ReactDOM.render(
-  <LocaleProvider>
+  <ConfigProvider locale={zhCN}>
     <AppContainer>
-       <Provider store={store}>
-          <RouteIndex/>
-       </Provider>
+      <Provider store={store}>
+        <RouteIndex/>
+      </Provider>
    </AppContainer>
-  </LocaleProvider>
-   , document.getElementById('root'));
+  </ConfigProvider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

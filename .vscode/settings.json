@@ -1,3 +1,7 @@
 {
-	"editor.fontSize": 16
+	"editor.fontFamily": "'Courier New', Consolas, monospace",
+  "editor.fontSize": 16,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+	"explorer.confirmDelete": false,
+	"editor.tabSize": 2,
 }
