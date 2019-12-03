@@ -8,6 +8,14 @@ const  RangePicker = DatePicker.RangePicker;
 class SearchBox extends React.Component{
 	  constructor(props) {
 			super(props);
+			this.state = {
+				phone: '',
+				email: '',
+				sex: '',
+				role: '',
+				status: '',
+				date: []
+			}
 		}
 		
 		getSearchContent = (arg) => {
@@ -26,13 +34,29 @@ class SearchBox extends React.Component{
 		}
 		
 		handleChange = (item, value) => {
-      this.props.setSearchVal(value, item.key)
+			this.props.setSearchVal(value, item.key);
+			this.setState({[item.key]: value})
+		}
+
+		handleTimerChange = (item, e, value) =>  {
+		 this.props.setSearchVal(value, item.key);
+		}
+		
+		handleReset = (e) => {
+		  this.setState({
+				phone: '',
+				email: '',
+				sex: '',
+				role: '',
+				status: '',
+			})
+			this.handleTimerChange({key: 'date'}, e, ["", ""])
 		}
 
 		getSearchItem = (item) => {
 			if(item.type === 'input') {
 				return (
-					<Input/>
+					<Input onChange={(e) => {this.props.setSearchVal(e.target.value,item.key); this.setState({[item.key]: e.target.value})}} value={this.state[item.key]}/>
 				)
 			}else if(item.type === 'select') {
 				return (
@@ -42,6 +66,7 @@ class SearchBox extends React.Component{
 							placeholder={item.placeholder ? item.placeholder : '请选择'}
 							optionFilterProp="children"
 							onChange={this.handleChange.bind(this,item)}
+							value={this.state[item.key]}
 						>
 							{
 								item.value.map((it, index) => {
@@ -55,8 +80,9 @@ class SearchBox extends React.Component{
 					</Select>
 				)
 			}else if(item.type === 'date') {
+				debugger
 				return (
-					<RangePicker onChange={this.handleChange} style={{ width: '100%' }}/>
+					<RangePicker onChange={this.handleTimerChange.bind(this, item)} style={{ width: '100%' }}/>
 				)
 			}
 		}

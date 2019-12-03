@@ -8,7 +8,6 @@ export const update_menu = (param) => {
 }
 
 export const  reload_menu = (param) => {
-	debugger;
 	return {
 		type: types.RELOAD_MENU,
 		param: param.item

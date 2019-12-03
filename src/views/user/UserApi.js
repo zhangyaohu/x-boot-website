@@ -10,6 +10,10 @@ let UserAPI = {
   queryDetailUser(param) {
     return HttpAPI.get('/users/user', param)
     .then((resp) => resp);
+  },
+
+  deleteUsers(param) {
+    return HttpAPI.delete('/users/user', {id:param})
   }
 };
 

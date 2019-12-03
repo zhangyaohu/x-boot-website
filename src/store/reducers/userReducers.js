@@ -10,7 +10,7 @@ const userReducers = (state = initialState.state, action) => {
 		case types.QUERY_USER_LIST:
 			console.log(action.payload);
 			return action.payload;
-		case 'ERROR':
+		case types.USER_DELETE:
 			return action.payload;
 		default:
 			return state;

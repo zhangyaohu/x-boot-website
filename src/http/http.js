@@ -4,7 +4,7 @@ let config = {
 	baseURL: '/api',
 	transformRequest: [
 		function (data) {
-			if(config.method === 'get') {
+			if(config.method === 'get' || config.method == 'delete') {
 				let  ret = '';
 				for (let it in config.params) {
 					ret += it + '=' + data[it] + '&'
@@ -52,8 +52,8 @@ let HttpAPI = {
 		return axios.put(url, config)
 	},
 
-	delete(url, config) {
-		return axios.delete(url, config)
+	delete(url, params) {
+		return axios.delete(url, Object.assign({} ,config , {params}))
 	}
 };
 

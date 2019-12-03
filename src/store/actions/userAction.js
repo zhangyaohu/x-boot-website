@@ -6,6 +6,13 @@ const userAction = {
        type: types.QUERY_USER_LIST,
        payload
      }
+   },
+
+   user_delete: (payload) => {
+     return {
+      type: types.USER_DELETE,
+      payload
+     }
    }
 }
 
