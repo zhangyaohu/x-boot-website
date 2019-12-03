@@ -107,7 +107,9 @@ class User extends Component {
             <Button className={style.user_btn} 
                     icon='minus-circle' 
                     type="default" 
-                    onClick={this.opreation.bind(this,'disable',rows)}>禁用</Button>
+                    onClick={this.opreation.bind(this,'disable',rows)}>
+                      {rows.status === 0 ? '禁用' : '启用'}
+                    </Button>
           </div>)
         }
       ],
@@ -167,7 +169,26 @@ class User extends Component {
           selectedRows: [rows]
         })
         this.handleBatchDelete(e);
+        break;
+      case 'disable': 
+       this.handleUpdateSstatus(rows);
+       break;
     }
+  }
+
+  //停用 启用
+  handleUpdateSstatus = (rows) => {
+    let updateParam = {id: rows.id};
+    if(rows.status === 0) {
+      updateParam['status'] = 1;
+    }else {
+      updateParam['status'] = 0;
+    }
+    UserApi.updateStatus(updateParam)
+    .then((resp) => {
+       this.props.updateStatus(resp.data);
+       this.queryList();
+    })
   }
 
   componentDidMount(){
@@ -175,6 +196,9 @@ class User extends Component {
   }
   
   queryList = (param) => {
+    this.setState({
+      loading: true
+    })
     UserApi.queryUserList(Object.assign({}, param,{
       sort: `${this.state.sortDirection}${this.state.sortBy}`,
       pageSize: this.state.pageSize,
@@ -184,7 +208,8 @@ class User extends Component {
       this.props.queryUserList(resp.data);
       this.setState({
         userData: this.props.userData.data,
-        total:  this.props.userData.total
+        total:  this.props.userData.total,
+        loading: false
       })
     })
   }
@@ -221,6 +246,9 @@ class User extends Component {
     })
     UserApi.deleteUsers(idParams.join(','))
     .then((resp) => {
+      this.setState({
+        visible: false
+      })
       this.props.deleteUser(resp.data);
       this.queryList();
     })
@@ -317,7 +345,12 @@ class User extends Component {
         </div>
 
         <div className='page-table-contaienr'>
-          <Table rowSelection={rowSelection} columns={this.state.columns} loading={loading} dataSource={this.state.userData} bordered pagination={false}></Table>
+          <Table rowSelection={rowSelection} 
+                 columns={this.state.columns} 
+                 loading={loading} 
+                 dataSource={this.state.userData}
+                 bordered 
+                 pagination={false}></Table>
           <div className='page-table-pagination'>
             <Pagination showSizeChanger
                         onShowSizeChange={this.handleSizeChange}
@@ -362,7 +395,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     queryUserList: (payload) => dispatch(userAction.query_user_list(payload)),
-    deleteUser: (payload) => dispatch(userAction.user_delete(payload))
+    deleteUser: (payload) => dispatch(userAction.user_delete(payload)),
+    updateStatus: (payload) => dispatch(userAction.user_update_status(payload))
   }
 }
 

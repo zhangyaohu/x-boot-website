@@ -13,6 +13,13 @@ const userAction = {
       type: types.USER_DELETE,
       payload
      }
+   },
+
+   user_update_status: (payload) => {
+     return {
+       type: types.USER_UPDATE_STATUS,
+       payload
+     }
    }
 }
 

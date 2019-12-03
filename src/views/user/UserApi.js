@@ -13,7 +13,11 @@ let UserAPI = {
   },
 
   deleteUsers(param) {
-    return HttpAPI.delete('/users/user', {id:param})
+    return HttpAPI.delete('/users/user', {ids:param})
+  },
+
+  updateStatus(param) {
+    return HttpAPI.put('/users/user/status', param);
   }
 };
 

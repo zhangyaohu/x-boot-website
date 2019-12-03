@@ -4,13 +4,11 @@ let config = {
 	baseURL: '/api',
 	transformRequest: [
 		function (data) {
-			if(config.method === 'get' || config.method == 'delete') {
 				let  ret = '';
-				for (let it in config.params) {
+				for (let it in data) {
 					ret += it + '=' + data[it] + '&'
 				}
 				return ret;
-			}
 		}
 	],
 	transformResponse: [
@@ -29,27 +27,28 @@ axios.interceptors.request.use((config) => {
 	return config;
 })
 
-// axios.interceptors.response = (res) => {
-// 	if (res.status === 500) {
-
-// 	}
-// 	if(res.status === 200) {
-// 		return res.data;
-// 	}
-// }
+axios.interceptors.response.use((res) => {
+		if (res.data.status === '500') {
+	    return Promise.resolve(res.data);
+		}
+		if(res.data.status === '200') {
+		  return res;
+		}
+	}
+)
 
 let HttpAPI = {
 	get(url, params) {
-		debugger;
 	  return axios.get(url, Object.assign({} ,config , {params}))
 	},
 
-	post(url, config) {
-		return axios.get(url, config)
+	post(url, params) {
+		return axios.get(url, params, config)
 	},
 
-	put(url, config) {
-		return axios.put(url, config)
+	put(url, params) {
+		debugger;
+		return axios.put(url,params, config)
 	},
 
 	delete(url, params) {
