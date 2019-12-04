@@ -1,0 +1,42 @@
+@import '../../../mixins.less';
+.create_header{
+	height: 60px;
+	width: 60%;
+	box-shadow: 1px 0px 1px @border-color;
+	background: #fff;
+	padding: 15px 30px;
+	position: fixed;
+
+  &_title{
+		font-size: 16px;
+		color: @font-color;
+		padding-right: 10px;
+	}
+
+	&_back{
+		display: inline-block;
+		padding: 2px 10px;
+		font-size: 12px;
+		color: @font-color;
+		border: 1px solid @border-color-high;
+		border-radius: 2px;
+		cursor: pointer;
+	}
+}
+
+.create_body{
+	padding: 20px 30px;
+	overflow: auto;
+	position: relative;
+	top: 60px;
+}
+
+.create_footer{
+	height: 60px;
+	width: 60%;
+	box-shadow: -1px 0px 1px @border-color;
+	position: fixed;
+	bottom: 0px;
+	text-align: center;
+	line-height: 60px;
+}

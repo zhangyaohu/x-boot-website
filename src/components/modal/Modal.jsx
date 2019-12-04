@@ -21,7 +21,6 @@ class Dialog extends Component {
 	}
 	
 	componentDidUpdate(prevProps){
-		debugger
 		if(prevProps.visible!==this.props.visible){
 				this.setState({
 					visible: this.props.visible,

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
-import { update_menu, reload_menu } from '../../store/actions/menuAction';
+import { update_menu, reload_menu, show_create_detail } from '../../store/actions/menuAction';
 import style from './menu.less';
 import {Icon} from 'antd';
 
@@ -10,7 +10,7 @@ class Menu extends Component{
 		 super(props);
 		 this.state = {
 			menuList: []
-		 }
+     }
 	 }
 	 
 	 
@@ -18,6 +18,11 @@ class Menu extends Component{
      event.stopPropagation() 
 		 if(item.type === 'link') {
       this.props.histroy.push(item.path);
+      if(item.path.indexOf('add') > -1) {
+        this.props.isCreateOrDetail(true);
+      } else {
+        this.props.isCreateOrDetail(false);
+      }
      }
      this.props.updateMenu(item);
      let newMenuList = this.props.menuList;
@@ -29,6 +34,7 @@ class Menu extends Component{
 	 isActive = (item) => {
 	  return this.props.histroy.location.pathname ===  item.path
 	 }
+   
 
 	 getDom = (menuList) => {
 		 return menuList.map((item, index) => {
@@ -46,7 +52,7 @@ class Menu extends Component{
             item.type === 'button'
             ?
             <div>
-              <li className={[style.menu_item_children,style.menu_item_1,`${item.isActive ? style.active : style.no_active}`].join(' ')} 
+              <li className={[style.menu_item_children,style.menu_item_1,`${item.isActive || this.isActive(item) ? style.active : style.no_active}`].join(' ')} 
                 onClick={this.changeRoute.bind(this,item)}>
                 <Icon type={item.icon} className={style.icon}/>
                 <h4 className={style.menu_item_title}>{item.title}</h4>
@@ -70,6 +76,12 @@ class Menu extends Component{
      this.setState({
        menuList: this.props.menuList
      })
+     this.props.histroy.listen((route)=>{
+       this.props.reloadMenu(route.path);
+       this.setState({
+        menuList: this.props.menuList
+      })
+      });
    } 
 	 render () {
 		 return (
@@ -84,14 +96,15 @@ class Menu extends Component{
 
 const mapStateToProps = (state) => {
 	return {
-    menuList: state.menuList
+    menuList: state.menuReducer.menu,
 	}
 }
 
 const mapDispatchToProps = (dispatch, ownerProps) => {
   return {
     updateMenu: (item) => dispatch(update_menu({type: 'update_menu', item})),
-    reloadMenu: (item) => dispatch(reload_menu({type: 'reload_menu', item}))
+    reloadMenu: (item) => dispatch(reload_menu({type: 'reload_menu', item})),
+    isCreateOrDetail: (payload) => dispatch(show_create_detail(payload))
 	}
 }
 
@@ -100,5 +113,4 @@ Menu.propTypes = {
   updateMenu: PropTypes.func,
   reloadMenu: PropTypes.func
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

@@ -13,3 +13,10 @@ export const  reload_menu = (param) => {
 		param: param.item
 	}
 }
+
+export const show_create_detail = (param) => {
+	return {
+		type: types.SHOW_CRETE_DETAIL,
+		param: param
+	}
+}

@@ -37,7 +37,8 @@ class User extends Component {
           title: '用户名',
           dataIndex: 'username',
           key: 'username',
-          ellipsis: true
+          ellipsis: true,
+          sorter: true
         },
         {
           title: '头像',
@@ -55,7 +56,8 @@ class User extends Component {
           title: '手机',
           dataIndex: 'mobile',
           key: 'mobile',
-          ellipsis: true
+          ellipsis: true,
+          sorter: true
         },
         {
           title: '邮箱',
@@ -86,7 +88,8 @@ class User extends Component {
           dataIndex: 'create_time',
           key: 'create_time',
           render: text => formatDateTime(text, 'yyyy-MM-dd hh:mm:ss'),
-          ellipsis: true
+          ellipsis: true,
+          sorter: true
         },
         {
           title: '操作',
@@ -220,10 +223,6 @@ class User extends Component {
       batchSelect: selectedRows
     })
   }
-
-  handleSizeChange = () => {
-
-  }
   
   handleBatchDelete = (e) => {
     e.stopPropagation();
@@ -274,6 +273,15 @@ class User extends Component {
     })
     this.refs.search.handleReset(e);
     this.queryList();
+  }
+  
+  handleTableChange = (pagination, filters, sorter) => {
+   let {order, field, columnKey} = sorter;
+   this.setState({
+     sortDirection: order === "ascend" ? '-' : '+',
+     sortBy: columnKey
+   })
+   this.queryList();
   }
 
 	render() {
@@ -348,9 +356,9 @@ class User extends Component {
           <Table rowSelection={rowSelection} 
                  columns={this.state.columns} 
                  loading={loading} 
-                 dataSource={this.state.userData}
-                 bordered 
-                 pagination={false}></Table>
+                 dataSource={this.state.userData} 
+                 pagination={false} 
+                 onChange={this.handleTableChange}></Table>
           <div className='page-table-pagination'>
             <Pagination showSizeChanger
                         onShowSizeChange={this.handleSizeChange}

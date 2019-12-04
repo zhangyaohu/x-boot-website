@@ -18,6 +18,10 @@ let UserAPI = {
 
   updateStatus(param) {
     return HttpAPI.put('/users/user/status', param);
+  },
+
+  uploadAvatar(param) {
+    return HttpAPI.upload('/users/upload', param);
   }
 };
 

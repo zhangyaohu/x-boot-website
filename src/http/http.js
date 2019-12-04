@@ -43,16 +43,19 @@ let HttpAPI = {
 	},
 
 	post(url, params) {
-		return axios.get(url, params, config)
+		return axios.post(url, params, config)
 	},
 
 	put(url, params) {
-		debugger;
 		return axios.put(url,params, config)
 	},
 
 	delete(url, params) {
-		return axios.delete(url, Object.assign({} ,config , {params}))
+		return axios.delete(url, params,)
+	},
+
+	upload(url, params) {
+		return axios.post(url, params, config)
 	}
 };
 

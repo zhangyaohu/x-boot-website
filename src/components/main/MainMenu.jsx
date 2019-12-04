@@ -9,7 +9,6 @@ export default class MainMenu extends Component {
 	
 	render() {
 		const {history} = this.props;
-		console.log(this.props);
 		return (
 			<div className={style.menu}>
         <Menu histroy={history}></Menu>

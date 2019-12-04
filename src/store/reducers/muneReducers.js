@@ -1,4 +1,7 @@
+import * as types from '../mutations-types';
+
 let initState = {
+  isCreateOrDetail:  false,
   menu: [
     {
       path: '/home',
@@ -39,7 +42,7 @@ let initState = {
               ]
              },
              {
-              path: '/home/user/add',
+              path: '/home/add-user',
               type: 'link',
               icon: 'user',
               title: '添加用户',
@@ -157,18 +160,19 @@ function firstInit(payload) {
   setExpand(initState.menu, payload);
 }
 
-const menuReducer = (state = initState.menu, action) => {
+const menuReducer = (state = initState, action) => {
   switch (action.type) {
     case 'update_menu':
       findParents(action.param)
-      break;
+      return state;
     case 'reload_menu':
         firstInit(action.param);
-      break;
+      return state;
+    case types.SHOW_CRETE_DETAIL:
+       return Object.assign({}, state, {isCreateOrDetail: action.param});
     default:
       return state;
   }
-  return state;
 }
 
 export default menuReducer;

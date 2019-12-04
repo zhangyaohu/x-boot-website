@@ -3,6 +3,6 @@ import userReducers from './userReducers';
 
 
 export default {
-	menuList: menuReducer,
+	menuReducer: menuReducer,
 	userData: userReducers
 }
