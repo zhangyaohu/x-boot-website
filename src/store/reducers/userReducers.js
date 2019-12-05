@@ -13,6 +13,8 @@ const userReducers = (state = initialState.state, action) => {
 			return action.payload;
 		case types.USER_UPDATE_STATUS:
 			return action.payload;
+		case types.USER_UPLOAD_IMAGE:
+			return action.payload;
 		default:
 			return state;
 	}

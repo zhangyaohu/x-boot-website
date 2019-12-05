@@ -20,6 +20,13 @@ const userAction = {
        type: types.USER_UPDATE_STATUS,
        payload
      }
+   },
+
+   user_upload_image: (payload) => {
+     return {
+       type: types.USER_UPLOAD_IMAGE,
+       payload
+     }
    }
 }
 
