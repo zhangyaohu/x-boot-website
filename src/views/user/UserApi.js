@@ -45,6 +45,14 @@ let UserAPI = {
       // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
       xhr.send(param);
     })
+  },
+
+  AddUser(param) {
+    return HttpAPI.post('/users/add', param);
+  },
+
+  resetPsw(param) {
+    return HttpAPI.put('/users/updatePsw', param);
   }
 };
 

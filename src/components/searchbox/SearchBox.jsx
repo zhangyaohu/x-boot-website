@@ -80,7 +80,6 @@ class SearchBox extends React.Component{
 					</Select>
 				)
 			}else if(item.type === 'date') {
-				debugger
 				return (
 					<RangePicker onChange={this.handleTimerChange.bind(this, item)} style={{ width: '100%' }}/>
 				)

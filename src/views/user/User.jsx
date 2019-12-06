@@ -3,11 +3,13 @@ import { Button, Icon, Dropdown, Menu, Input, Table, Pagination, Modal} from 'an
 import PropTypes from 'prop-types';
 import style from './user.less';
 import  SerchBox from '../../components/searchbox/SearchBox';
+import { show_create_detail } from '../../store/actions/menuAction';
 import UserApi from './UserApi';
 import { connect } from "react-redux";
 import userAction from '../../store/actions/userAction';
-import {formatDateTime} from '../../utils/utils';
+import {formatDateTime, downFile} from '../../utils/utils';
 import Dialog from '../../components/modal/Modal';
+import ResetPasswordDlg from './components/ResetPasswordDlg';
 
 class User extends Component {
 	constructor (props) {
@@ -24,6 +26,8 @@ class User extends Component {
       username:"",
       userData: [],
       batchSelect: [],
+      visibleResetPsw: false,
+      resetParam: {},
       searchConditionList: [
         {type: 'input', label: '手机号',  key: 'phone', value: ''},
         {type: 'input', label: '邮箱', key: 'email' , value: ''},
@@ -142,20 +146,39 @@ class User extends Component {
         break;
     }
   }
-  
+  //重置密码
+  resetPsw = () => {
+    this.setState({
+      visibleResetPsw: true,
+      resetParam: this.state.selectedRows[0]
+    })
+  }
+  //导出所选数据
+  export = () => {
+    let exportObj = `用户名,头像,部门,手机,邮箱,性别,用户类型,状态,创建\n`;
+   this.state.selectedRows.forEach((it) => {
+     exportObj +=`${it.username},${it.avatar},${it.department},${it.phone},${it.email},${it.sex},${it.type === 0 ? '管理员' :'普通用户'}, ${it.state}, ${formatDateTime(it.create_time, 'yyyy-MM-dd hh:mm:ss')}\n`
+   })
+   downFile(`user-${formatDateTime(new Date(), 'yyyy-MM-dd hh:mm:ss')}.csv`, exportObj);
+  }
+  //导出全部数据
+  exportAll = () => {
+    this.export();
+  }
+  //刷新
   refresh = () => {
     this.setState({
       pageIndex: 1,
     })
     this.queryList();
   }
-
+  //展示高级设置
   handleShowAdvice = () => {
     this.setState({
       showAdvice: !this.state.showAdvice
     })
   }
-  
+  //或得搜索数据
   getSearchVal = (value, key) => {
     this.setState(async state => {
       state[key] = value;
@@ -164,7 +187,7 @@ class User extends Component {
       }
     });
   }
-
+ //表格操作
   opreation = (type, rows, e) => {
     switch(type) {
       case 'delete':
@@ -175,10 +198,13 @@ class User extends Component {
         break;
       case 'disable': 
        this.handleUpdateSstatus(rows);
+       case 'edit':
+        this.props.history.push('/home/add-user', {user: rows})
+        this.props.setCreateOrDetail(true);
        break;
     }
   }
-
+  
   //停用 启用
   handleUpdateSstatus = (rows) => {
     let updateParam = {id: rows.id};
@@ -197,7 +223,7 @@ class User extends Component {
   componentDidMount(){
     this.queryList();
   }
-  
+  //查询表格数据
   queryList = (param) => {
     this.setState({
       loading: true
@@ -216,28 +242,28 @@ class User extends Component {
       })
     })
   }
-  
+  //多选操作
   handleSelection = (selectedRows) => {
     this.setState({
       selectedRows: selectedRows,
       batchSelect: selectedRows
     })
   }
-  
+  //批量删除用户
   handleBatchDelete = (e) => {
     e.stopPropagation();
     this.setState({
       visible: true
     })
   }
-
+  //取消弹框
   handleCancel = (e) => {
     e.stopPropagation();
     this.setState({
       visible: false
     })
   }
-
+  //确定删除提示
   handleConfirm = (e) => {
     e.stopPropagation();
     let idParams = this.state.selectedRows.map(it => {
@@ -283,13 +309,18 @@ class User extends Component {
    })
    this.queryList();
   }
+ 
+  handleAddUser = () => {
+    this.props.history.push('/home/add-user')
+    this.props.setCreateOrDetail(true);
+  }
 
 	render() {
     const { loading, selectedRowKeys } = this.state;
     const menu = (
       <Menu onClick={this.handleSelected}>
         <Menu.Item key="refresh">刷新</Menu.Item>
-        <Menu.Item key="resetPsw">重置用户密码</Menu.Item>
+        <Menu.Item key="resetPsw" disabled={this.state.selectedRows.length !== 1}>重置用户密码</Menu.Item>
         <Menu.Item key="export">导出所选数据</Menu.Item>
         <Menu.Item key="exportAll">导出全部数据</Menu.Item>
       </Menu>
@@ -304,7 +335,7 @@ class User extends Component {
 			<div className='page-container'>
 			  <div className='page-toolbar'>
            <div className='page-toolbar-left'>
-              <Button type="primary" className='x-boot-btn'>
+              <Button type="primary" className='x-boot-btn' onClick={this.handleAddUser}>
                 <Icon type="plus"/>
                   <span>添加用户</span>
               </Button>
@@ -384,6 +415,10 @@ class User extends Component {
               }
             </div>
         </Dialog>
+
+        <ResetPasswordDlg visible={this.state.visibleResetPsw} 
+                          onClose={() => this.setState({visibleResetPsw: false})} 
+                          param={this.state.resetParam}></ResetPasswordDlg>
 			</div>
 		)
 	}
@@ -396,7 +431,7 @@ User.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-   userData: state.userData
+   userData: state.userData,
   }
 }
 
@@ -404,7 +439,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     queryUserList: (payload) => dispatch(userAction.query_user_list(payload)),
     deleteUser: (payload) => dispatch(userAction.user_delete(payload)),
-    updateStatus: (payload) => dispatch(userAction.user_update_status(payload))
+    updateStatus: (payload) => dispatch(userAction.user_update_status(payload)),
+    setCreateOrDetail: (payload) => dispatch(show_create_detail(payload))
   }
 }
 

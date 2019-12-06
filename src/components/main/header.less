@@ -1,0 +1,47 @@
+.header{
+	width: 100%;
+	height: 100%;
+	 &_left{
+		width: 180px;
+		background-image: url('../../logo.svg');
+		background-repeat: no-repeat;
+		background-size: 65px;
+    height: 100%;
+		background-position: 47px 0px;
+		display: inline-block;
+	 }
+	 &_right{
+		 display: inline-flex;
+		 height: 60px;
+		 flex-grow: 1;
+
+		 &__right{
+			 flex: 0 1 auto;
+			 display: flex;
+			 justify-content: space-between;
+			 .layout_content{
+				height: 60px;
+				line-height: 60px;
+				padding: 0px 20px;
+				font-size: 26px;
+			}
+		 }
+
+		 &__left{
+			 flex:7 1 auto;
+		 }
+
+	 }
+	 &_layout{
+		 height: 60px;
+		 line-height: 60px;
+		 font-size: 26px;
+
+		 &__item {
+			 display: inline-block;
+			 height: 60px;
+			 line-height: 60px;
+			 padding: 0px 20px;
+		 }
+	 }
+}

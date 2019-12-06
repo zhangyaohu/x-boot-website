@@ -2,12 +2,16 @@
 import React, {Component} from 'react';
 import {Form, Input, Icon,  Button} from 'antd';
 import style from './login.less';
+import LoginApi from './LoginApi';
 
 const FormItem = Form.Item;
 
  class Login extends Component {
   constructor (props) {
 		super(props);
+		this.state = {
+			verifyCode: ''
+		}
 	}
 	
 	handleSubmit = e => {
@@ -43,8 +47,13 @@ const FormItem = Form.Item;
 		callback();
 	}
 
+	componentDidMount () {
+	
+	}
+
 	render() {
 		const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+		console.log(this.state.verifyCode);
 		return (
 			<div className={style.container}>
 				<div className={style.content}>
@@ -88,7 +97,9 @@ const FormItem = Form.Item;
 										placeholder="请输入验证码"
 									/>,
 								)}
-								<div className={style.verfy_code}></div>
+								<div className={style.verfy_code}>
+								   <img src="/api/verifyCode" alt="captcha" />
+								</div>
 						</FormItem>
 					  <FormItem>
 							<Button type="primary" htmlType="submit" className={style.submitBtn}>

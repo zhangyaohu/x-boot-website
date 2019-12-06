@@ -164,6 +164,9 @@ li{
   margin: 0px 10px;
 }
 
+.disabled{
+  background: #d9d9d9;
+}
 
 
 

@@ -28,11 +28,13 @@ axios.interceptors.request.use((config) => {
 })
 
 axios.interceptors.response.use((res) => {
-		if (res.data.status === '500') {
+	debugger
+		if (res.data && res.data.status && res.data.status === '500') {
 	    return Promise.resolve(res.data);
-		}
-		if(res.data.status === '200') {
+		}else if(res.data && res.data.status && res.data.status === '200') {
 		  return res;
+		}else {
+			return res;
 		}
 	}
 )
@@ -51,7 +53,7 @@ let HttpAPI = {
 	},
 
 	delete(url, params) {
-		return axios.delete(url, params,)
+		return axios.delete(url, Object.assign({} ,config , {params}))
 	},
 
 	upload(url, params) {
