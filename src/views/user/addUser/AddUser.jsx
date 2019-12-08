@@ -26,7 +26,8 @@ class AddUser extends Component {
 			description: '',
 			address: '',
 			email: '',
-			ID: ''
+			ID: '',
+			isEdit: false
 		}
 	}
 
@@ -118,14 +119,25 @@ class AddUser extends Component {
 				 this.setState({
 					canCreate: false
 				 })
-				 UserApi.AddUser(createParam)
-				   .then(() => {
-						 this.goBack();
-					 }).catch(() => {
-						this.setState({
-						 	canCreate: true
-						 })
-					 });
+				 if(!this.state.isEdit) {
+					UserApi.AddUser(createParam)
+					.then(() => {
+						this.goBack();
+					}).catch(() => {
+					 this.setState({
+							canCreate: true
+						})
+					});
+				 }else {
+					UserApi.updateUser(createParam)
+					.then(() => {
+						this.goBack();
+					}).catch(() => {
+					 this.setState({
+							canCreate: true
+						})
+					});
+				 }
 			 }
 		})
 	}
@@ -142,7 +154,8 @@ class AddUser extends Component {
 		 debugger;
 		 let param = this.props.location.state.user;
 		 this.setState({
-			 ID: param.id
+			 ID: param.id,
+			 isEdit: true
 		 })
 		 form.setFieldsValue({'avatar': param.avatar});
 		 form.setFieldsValue({'type': param.type === 0 ? '管理员' : '普通用户'});

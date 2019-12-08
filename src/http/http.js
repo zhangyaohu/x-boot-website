@@ -33,7 +33,7 @@ axios.interceptors.response.use((res) => {
 	    return Promise.resolve(res.data);
 		}else if(res.data && res.data.status && res.data.status === '200') {
 		  return res;
-		}else {
+		}else{
 			return res;
 		}
 	}

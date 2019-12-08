@@ -199,7 +199,7 @@ class User extends Component {
       case 'disable': 
        this.handleUpdateSstatus(rows);
        case 'edit':
-        this.props.history.push('/home/add-user', {user: rows})
+        this.props.history.push('/home/add-user', {user: Object.assign({}, rows, {type: 'edit'})})
         this.props.setCreateOrDetail(true);
        break;
     }

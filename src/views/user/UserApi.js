@@ -53,6 +53,10 @@ let UserAPI = {
 
   resetPsw(param) {
     return HttpAPI.put('/users/updatePsw', param);
+  },
+
+  updateUser(param) {
+    return HttpAPI.put('/users/user', param);
   }
 };
 
