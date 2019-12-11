@@ -13,6 +13,10 @@ let DepartmentApi = {
 		.then((resp) => {
 			 return resp 
 		})
+	},
+
+	deleteDepartment: (params) => {
+		return HttpAPI.delete(`/department/delete`, params);
 	}
 }
 

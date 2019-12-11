@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import DepartmentApi from './departmentApi';
 import DepartmentAction from '../../store/actions/departmentAction';
 import { formatDateTime } from '../../utils/utils';
+import Dialog from '../../components/modal/Modal';
 import style from './department.less'
 
 class Department extends Component {
@@ -15,10 +16,13 @@ class Department extends Component {
 			sortDirection: '-',
 			sortBy: 'create_time',
 			departmentData: [],
+			selectedRowKeys: [],
+			selectedRow: [],
 			total: 0,
 			loading: false,
 			pageIndex: 1,
 			pageSize: 10,
+			visible: false,
 			columns: [
 				{
           title: '部门名称',
@@ -46,11 +50,18 @@ class Department extends Component {
 	}
 
 	handleSearch = () => {
-
+		let searchParam = {
+      'title': this.state.title
+    }
+    this.queryList(searchParam);
 	}
 
 	resetSerch = () => {
-
+    this.setState({
+			"title": ''
+		}, () => {
+			this.queryList();
+		})
 	}
 	 //查询表格数据
 	 queryList = (param) => {
@@ -81,21 +92,106 @@ class Department extends Component {
     })
 	}
 	
+	handleSizeChange = (current, size) => {
+   this.setState({
+		 pageSize: size
+	 }, () => {
+		 this.queryList()
+	 })
+	}
+	
+	handlePageIndexChange = (current, size) => {
+		this.setState({
+			pageIndex: current
+		}, () => {
+			this.queryList()
+		})
+	}
+
 	componentDidMount() {
 	  this.queryList();
 	}
 
+  //多选操作
+  handleSelection = (selectedRowKeys,selectedRows) => {
+    this.setState({
+      selectedRow: selectedRows,
+      selectedRowKeys: selectedRowKeys
+    })
+  }
+	
+	//更多操作根据key值来做相应的操作
+	handleSelected = (e) => {
+		switch(e.key) {
+      case 'refresh':
+        this.refresh();
+        break;
+    }
+	}
+  //刷新
+	refresh = () => {
+		this.setState({
+			pageIndex: 1
+		}, () => {
+			this.queryList()
+		})
+	}
+	
+	//弹框确定按钮
+	handleConfirm = () => {
+		let ids = this.state.selectedRow.map(it => {
+			return it.id;
+		})
+		DepartmentApi.deleteDepartment({ids: ids.join(',')})
+		.then(() => {
+			this.queryList();
+		})
+		this.handleCancel();
+	}
+	//打开弹框
+	handleBatchDelete = () => {
+		this.setState({
+			visible: true
+		})
+	}
+
+	handleCancel = () => {
+   this.setState({
+		 visible: false
+	 })
+	}
+
+	handleTableChange = (pagination, filters, sorter) => {
+		let {order, field, columnKey} = sorter;
+		this.setState({
+			sortDirection: order === "ascend" ? '-' : '+',
+			sortBy: columnKey
+		})
+		this.queryList();
+	 }
+
 	render() {
-		const {columns, departmentData, total, loading, pageIndex} = this.state;
+		const {
+			     columns,
+			     departmentData, 
+					 total, 
+					 loading, 
+					 pageIndex, 
+					 selectedRowKeys, 
+					 selectedRow,
+					 visible} = this.state;
 		const menu = (
-      <Menu >
+      <Menu onClick={this.handleSelected}>
         <Menu.Item key="refresh">刷新</Menu.Item>
-        <Menu.Item key="resetPsw" >重置用户密码</Menu.Item>
-        <Menu.Item key="export">导出所选数据</Menu.Item>
-        <Menu.Item key="exportAll">导出全部数据</Menu.Item>
       </Menu>
 		);
 		
+		const rowSelection = {
+      selectedRowKeys,
+      onChange: (selectedRowKeys, selectedRows) => {
+        this.handleSelection(selectedRowKeys, selectedRows); 
+      }
+    };
 		return (
 			<div className='page-container'>
 			  <div className='page-toolbar'>
@@ -105,7 +201,9 @@ class Department extends Component {
                   <span>添加部门</span>
               </Button>
 							<Button type="default" 
-                      className='x-boot-btn'
+											className='x-boot-btn'
+											onClick={this.handleBatchDelete}
+											disabled={selectedRow.length<=0}
                       >
                 <Icon type="delete"/>
                   <span>批量删除部门</span>
@@ -135,19 +233,41 @@ class Department extends Component {
         </div>
 
         <div className='page-table-contaienr'>
-				  <Table 
+				  <Table rowSelection={rowSelection} 
                  columns={columns} 
                  loading={loading} 
-                 dataSource={departmentData} 
+								 dataSource={departmentData}
+								 onChange={this.handleTableChange}
                  pagination={false} 
                 ></Table>
           <div className='page-table-pagination'>
             <Pagination showSizeChanger
-              
-                        defaultCurrent={pageIndex}
+                         onShowSizeChange={this.handleSizeChange}
+												 current={pageIndex}
+												onChange={this.handlePageIndexChange}
                         total={total}></Pagination>
           </div>
         </div>
+    
+       {/*弹框*/}
+			 <Dialog visible={visible} 
+                title={'提示'} 
+                close={() => this.setState({visible: false})}
+                onOk={this.handleConfirm} 
+                onClose={this.handleCancel}>
+            <div className='confirm_description'>
+              确定要删除以下{selectedRow.length}条数据吗?
+            </div>
+            <div className='confirm_option_name'>
+              {
+                selectedRow.map((it, index) => {
+                  return (
+                   <span className='confirm_option_name_item' key={index}><Icon type="user"/>{it.title}</span>
+                  )
+                })
+              }
+            </div>
+        </Dialog>
 			</div>
 		)
 	}

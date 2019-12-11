@@ -13,7 +13,7 @@ export default class RouteIndex extends Component{
 	render() {
     const container = {
       "width": '100%',
-      "height": '100%'
+      "min-height": '100%'
     }
 		return (
 			<Router>
