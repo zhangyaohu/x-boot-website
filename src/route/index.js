@@ -19,9 +19,9 @@ export default class RouteIndex extends Component{
 			<Router>
 				<div style={container}>
           <Switch>
-            <Route path='/home' component={Home}></Route>
+            <Route path='/' component={Home}></Route>
             <Route path='/login' component={Login}></Route>
-            <Redirect path="/*" to='/home'></Redirect>
+            <Redirect path="/*" to='/'></Redirect>
           </Switch>
         </div>
 			</Router>

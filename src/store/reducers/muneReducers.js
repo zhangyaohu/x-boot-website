@@ -31,7 +31,7 @@ let initState = {
           isActive: false,
           children: [
             {
-              path: '/home/user',
+              path: '/main/user',
               type: 'link',
               icon: 'user',
               title: '用户列表',
@@ -42,7 +42,7 @@ let initState = {
               ]
              },
              {
-              path: '/home/add-user',
+              path: '/main/add-user',
               type: 'link',
               icon: 'user',
               title: '添加用户',
@@ -55,7 +55,7 @@ let initState = {
           ]
         },
         {
-          path: '/home/department',
+          path: '/main/department',
           type: 'button',
           icon: 'branches',
           title: 'department',
@@ -63,7 +63,7 @@ let initState = {
           isActive: false,
           children: [
             {
-              path: '/home/department',
+              path: '/main/department',
               type: 'link',
               icon: 'user',
               title: '部门列表',
@@ -74,7 +74,7 @@ let initState = {
               ]
              },
              {
-              path: '/home/department/:uuid',
+              path: '/main/department/:uuid',
               type: 'link',
               icon: 'user',
               title: '部门详情',

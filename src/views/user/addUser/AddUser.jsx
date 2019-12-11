@@ -32,7 +32,7 @@ class AddUser extends Component {
 	}
 
 	goBack = () => {
-		this.props.history.push(`/home/user`);
+		this.props.history.push(`/main/user`);
 		this.props.isCreateOrDetail(false);
 	}
 	

@@ -70,12 +70,12 @@ class Department extends Component {
 					it.parent_id = parentResp.data.data[0].title
 				})
 				.then(() => {
-					 this.setState({
-          departmentData: this.props.departmentData.data,
-          total:  this.props.departmentData.total,
-          loading: false,
-          selectedRowKeys: [],
-         }) 
+					this.setState({
+						departmentData: this.props.departmentData.data,
+						total:  this.props.departmentData.total,
+						loading: false,
+						selectedRowKeys: [],
+					})
 				})
 			})
     })

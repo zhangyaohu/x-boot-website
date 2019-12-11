@@ -16,6 +16,7 @@ class User extends Component {
     super(props);
     this.state = {
       selectedRows: [],
+      selectedRowKeys: [],
       showAdvice: false,
       status: '',
       phone: '',
@@ -199,7 +200,7 @@ class User extends Component {
       case 'disable': 
        this.handleUpdateSstatus(rows);
        case 'edit':
-        this.props.history.push('/home/add-user', {user: Object.assign({}, rows, {type: 'edit'})})
+        this.props.history.push('/main/add-user', {user: rows})
         this.props.setCreateOrDetail(true);
        break;
     }
@@ -238,15 +239,17 @@ class User extends Component {
       this.setState({
         userData: this.props.userData.data,
         total:  this.props.userData.total,
-        loading: false
+        loading: false,
+        selectedRowKeys: [],
       })
     })
   }
   //多选操作
-  handleSelection = (selectedRows) => {
+  handleSelection = (selectedRowKeys,selectedRows) => {
     this.setState({
       selectedRows: selectedRows,
-      batchSelect: selectedRows
+      batchSelect: selectedRows,
+      selectedRowKeys: selectedRowKeys
     })
   }
   //批量删除用户
@@ -265,6 +268,7 @@ class User extends Component {
   }
   //确定删除提示
   handleConfirm = (e) => {
+
     e.stopPropagation();
     let idParams = this.state.selectedRows.map(it => {
       return it.id;
@@ -311,7 +315,7 @@ class User extends Component {
   }
  
   handleAddUser = () => {
-    this.props.history.push('/home/add-user')
+    this.props.history.push('/main/add-user')
     this.props.setCreateOrDetail(true);
   }
 
@@ -327,8 +331,9 @@ class User extends Component {
     );
    
     const rowSelection = {
+      selectedRowKeys,
       onChange: (selectedRowKeys, selectedRows) => {
-        this.handleSelection(selectedRows); 
+        this.handleSelection(selectedRowKeys, selectedRows); 
       }
     };
 		return (
