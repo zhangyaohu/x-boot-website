@@ -2,7 +2,10 @@ import Http from '../../http/http';
 
 const LoginApi = {
 	getVerify: () => {
-    return Http.get('/verifyCode');
+    return Http.get('/logins/verifyCode');
+	},
+  login: (param) => {
+		return Http.post('/logins/login',param);
 	}
 }
 

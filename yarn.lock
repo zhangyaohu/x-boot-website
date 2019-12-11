@@ -4666,6 +4666,11 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
+gbk.js@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npm.taobao.org/gbk.js/download/gbk.js-0.3.0.tgz#1b62a0a3f137081c213905bfaee1b6abdac861bd"
+  integrity sha1-G2Kgo/E3CBwhOQW/ruG2q9rIYb0=
+
 get-caller-file@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"

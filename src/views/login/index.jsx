@@ -18,10 +18,21 @@ const FormItem = Form.Item;
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+				let param = {
+					username: values.username,
+					password: values.password,
+          verifyCode: values.verifyCode
+				}
+				LoginApi.login(param)
+			   .then((resp) => {
+           if(resp.data.status === '400') {
+						this.refs.verifyCode.src = `/api/logins/verifyCode?t=${new Date().getTime()}`
+					 }else {
+						 this.props.history.push('/home')
+					 }
+				 })
       }
     });
-    console.log(e);
 	}
 	
 	validateName = (rule, value, callback) => {
@@ -40,16 +51,15 @@ const FormItem = Form.Item;
 		const { form } = this.props;
 		if(!value) {
 			callback('')
-		}
-		if (value.length <2 || value.length > 18) {
+		}else if (value.length <2 || value.length > 18) {
 			callback('请输入2-18位字符')
-		}
-		callback();
+		}else callback();
 	}
 
 	componentDidMount () {
 	
 	}
+	
 
 	render() {
 		const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
@@ -89,17 +99,19 @@ const FormItem = Form.Item;
 						<FormItem>
 							{getFieldDecorator('verifyCode', {
 									rules: [{ required: true, message: '请输入验证码' },  {
-										validator: this.validatePassword,
+										validator: this.validateCode,
 								}],
 								})(
-									<Input className={style.verify_input}
+									<div>
+										<Input className={style.verify_input}
 									  type="text"
 										placeholder="请输入验证码"
-									/>,
+									/>
+									<div className={style.verfy_code}>
+								   <img src="/api/logins/verifyCode" alt="captcha" ref="verifyCode" onClick={() => this.refs.verifyCode.src = `/api/logins/verifyCode?t=${new Date().getTime()}`}/>
+								 </div>
+									</div>
 								)}
-								<div className={style.verfy_code}>
-								   <img src="/api/verifyCode" alt="captcha" />
-								</div>
 						</FormItem>
 					  <FormItem>
 							<Button type="primary" htmlType="submit" className={style.submitBtn}>
