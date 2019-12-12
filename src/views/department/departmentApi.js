@@ -4,7 +4,7 @@ let DepartmentApi = {
   getAllDepartment: (params) => {
 		return  HttpAPI.get('/department/all', params)
 		.then((resp) => {
-			return resp
+			return Promise.resolve(resp)
 		})
 	},
 
@@ -17,6 +17,10 @@ let DepartmentApi = {
 
 	deleteDepartment: (params) => {
 		return HttpAPI.delete(`/department/delete`, params);
+	},
+
+	addParent: (params) => {
+    return HttpAPI.post('/department/add', params);
 	}
 }
 

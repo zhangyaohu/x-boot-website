@@ -160,6 +160,12 @@ class Department extends Component {
 		 visible: false
 	 })
 	}
+	
+	//跳转到添加页面
+	handleAdd = () => {
+		debugger;
+    this.props.history.push(`/main/add-department`)
+	}
 
 	handleTableChange = (pagination, filters, sorter) => {
 		let {order, field, columnKey} = sorter;
@@ -196,7 +202,9 @@ class Department extends Component {
 			<div className='page-container'>
 			  <div className='page-toolbar'>
            <div className='page-toolbar-left'>
-					    <Button type="primary" className='x-boot-btn'>
+							<Button type="primary" 
+											className='x-boot-btn' 
+											onClick={this.handleAdd}>
                 <Icon type="plus"/>
                   <span>添加部门</span>
               </Button>

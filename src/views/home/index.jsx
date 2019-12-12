@@ -17,14 +17,7 @@ class Home extends Component {
 	}
 
 	componentDidMount() {
-		if(this.props.history.location.pathname.indexOf('add') > -1) {
-      this.props.setCreateOrDetail(true);
-		}else {
-			this.props.setCreateOrDetail(false);
-		}
-		this.setState({
-			isCreateOrDetail: this.props.isCreateOrDetail
-		})
+
 	}
 
 	render() {

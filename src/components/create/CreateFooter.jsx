@@ -10,7 +10,7 @@ class CreateFooter extends Component {
 	render () {
 		let {children} = this.props;
 		return (
-			<div className={style.create_footer}>
+			<div className={style.create_footer} style={{'width': 'calc(100vw - 220px)'}}>
 				{children}
 			</div>
 		);

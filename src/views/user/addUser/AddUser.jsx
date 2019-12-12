@@ -33,7 +33,6 @@ class AddUser extends Component {
 
 	goBack = () => {
 		this.props.history.push(`/main/user`);
-		this.props.isCreateOrDetail(false);
 	}
 	
 
@@ -92,7 +91,7 @@ class AddUser extends Component {
 	//id,create_by, create_time, update_by, update_time, address, avatar, description,email, mobile, nick_name, password,sex, status, type, username, del_flag, department_id, street, pass_strength
 	handleSubmit = (e) => {
 		e.preventDefault();
-    this.props.form.validateFields((err, values) => {		debugger;
+    this.props.form.validateFields((err, values) => {
        if(!err) {
 				 let createParam =  {
 					 id: this.state.ID ? this.state.ID : getUniqueId(),
@@ -151,7 +150,6 @@ class AddUser extends Component {
 	componentDidMount () {
 		let form = this.props.form;
    if(this.props.location && this.props.location.state && this.props.location.state.user) {
-		 debugger;
 		 let param = this.props.location.state.user;
 		 this.setState({
 			 ID: param.id,

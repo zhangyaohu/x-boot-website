@@ -18,11 +18,6 @@ class Menu extends Component{
      event.stopPropagation() 
 		 if(item.type === 'link') {
       this.props.histroy.push(item.path);
-      if(item.path.indexOf('add') > -1) {
-        this.props.isCreateOrDetail(true);
-      } else {
-        this.props.isCreateOrDetail(false);
-      }
      }
      this.props.updateMenu(item);
      let newMenuList = this.props.menuList;

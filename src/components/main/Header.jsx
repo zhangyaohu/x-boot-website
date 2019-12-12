@@ -8,7 +8,6 @@ export default class Header extends Component {
 	}	
 
 	handleSelected = (e) => {
-		debugger;
     if(e.key === 'layout') {
 			this.props.history.push('/login')
 		}

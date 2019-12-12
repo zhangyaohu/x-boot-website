@@ -9,7 +9,7 @@ class CreateBody extends Component {
 
 	render () {
 		let {children} = this.props;
-		return <div className={style.create_body} style={{'height': 'calc(100% - 120px)'}}>
+		return <div className={style.create_body} style={{'height': 'calc(100%)'}}>
 			{children}
 		</div>;
 	}

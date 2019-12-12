@@ -10,7 +10,7 @@ class CreateHeader extends Component {
 
 	render () {
 		const {title, goBack, description} = this.props;
-		return (<div className={style.create_header}>
+		return (<div className={style.create_header} style={{'width': 'calc(100vw - 220px)'}}>
 			<span className={style.create_header_title}>
 				{title}
 			</span>

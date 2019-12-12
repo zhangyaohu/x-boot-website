@@ -4,7 +4,7 @@ let initState = {
   isCreateOrDetail:  false,
   menu: [
     {
-      path: '/home',
+      path: '/main/home',
       type: 'link',
       title: '首页',
       icon: 'home',
@@ -83,7 +83,7 @@ let initState = {
               children: [
 
               ]
-             }
+             },
           ]
         }
       ]

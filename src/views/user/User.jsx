@@ -202,7 +202,7 @@ class User extends Component {
        break;
        case 'edit':
         this.props.history.push('/main/add-user', {user: rows})
-        this.props.setCreateOrDetail(true);
+        //this.props.setCreateOrDetail(true);
        break;
     }
   }
@@ -317,7 +317,6 @@ class User extends Component {
  
   handleAddUser = () => {
     this.props.history.push('/main/add-user')
-    this.props.setCreateOrDetail(true);
   }
 
 	render() {

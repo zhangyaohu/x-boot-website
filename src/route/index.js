@@ -17,13 +17,11 @@ export default class RouteIndex extends Component{
     }
 		return (
 			<Router>
-				<div style={container}>
           <Switch>
-            <Route path='/' component={Home}></Route>
+            <Route path='/main' component={Home}></Route>
             <Route path='/login' component={Login}></Route>
-            <Redirect path="/*" to='/'></Redirect>
+            <Redirect path="/*" to='/main'></Redirect>
           </Switch>
-        </div>
 			</Router>
 		)
 	}
