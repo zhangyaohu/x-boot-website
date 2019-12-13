@@ -87,38 +87,6 @@ let initState = {
           ]
         }
       ]
-    },
-    {
-      path: '',
-      type: 'button',
-      icon: 'user',
-      title: '统计管理',
-      isCollpse: false,
-      isActive: false,
-      children: [
-        {
-          path: '/home/1',
-          type: 'button',
-          icon: 'user',
-          title: 'user',
-          isCollpse: false,
-          isActive: false,
-          children: [
-           
-          ]
-        },
-        {
-          path: '/home/2',
-          type: 'link',
-          icon: 'branches',
-          title: 'department',
-          isCollpse: false,
-          isActive: false,
-          children: [
-
-          ]
-        }
-      ]
     }
   ]
 }

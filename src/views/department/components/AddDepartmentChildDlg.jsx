@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Dialog from '../../../components/modal/Modal';
-import {Form, Input, InputNumber, Switch} from 'antd';
+import {Form, Input, InputNumber, Switch, message} from 'antd';
 import DepartmentApi from '../departmentApi';
 const Item = Form.Item;
 
@@ -20,15 +20,20 @@ class AddDepartmentChildDlg extends Component{
 		e.stopPropagation();
 		this.props.form.validateFields((err, values) => {
 			if(!err) {
-				debugger
 				let param = {
 					'parent_id': this.props.message.type === 'addParent' ?  values.parentId : 0 ,
 					'sort_order': values.sortOrder,
 					'status': values.status,
 					'title': values.title
 				}
-				DepartmentApi.addParent(param);
-				this.props.close();
+				DepartmentApi.addParent(param)
+				 .then(() => {
+					message.info('添加部门成功！');
+					this.props.close();
+				 }).catch(() => {
+					message.error('添加部门失败！');
+					this.props.close();
+				 })
 			}
 		})
 	}
@@ -76,7 +81,7 @@ class AddDepartmentChildDlg extends Component{
             {
 							this.props.message.type === 'addParent' ?  <Item label="上级部门">
 							{getFieldDecorator('parentId', {
-								initialValue: this.props.message.type === 'addParent' ? 0 : this.props.message.parentId,
+								initialValue: this.props.message.type === 'addParent' ? this.props.message.parentId : 0,
 								rules: [{ required: true}]
 							})(<span>{this.props.message.parentTitle}</span>)}
 						 </Item> : null

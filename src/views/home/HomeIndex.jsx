@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import style from './home.less';
 import {Timeline} from 'antd';
+import HomeApi from './homeApi';
 
 class HomeIndex extends Component {
 	constructor(props) {
@@ -8,9 +9,25 @@ class HomeIndex extends Component {
 		this.state = {
 			initClientWidth: 0,
 			initClientHeight: 0,
+			userList: [],
+			departmentList: []
 		}
 	}
-
+	
+	init = () => {
+		HomeApi.queryUser()
+		.then(resp => {
+			this.setState({
+				userList: resp
+			})
+		});
+		HomeApi.queryDepartment()
+		.then(resp => {
+			this.setState({
+				departmentList: resp
+			})
+		});
+	}
   componentDidMount() {
 		this.setState({
 			initClientWidth:  document.body.clientWidth,
@@ -20,6 +37,7 @@ class HomeIndex extends Component {
 			this.refs.home_container.setAttribute('style', `transform:scale(${1}, ${ratioY});transform-origin: left top 0px;`)
 			window.addEventListener('resize',this.changeContainer)
 		})
+		this.init();
 	}
 
 	changeContainer = () => {
@@ -30,26 +48,31 @@ class HomeIndex extends Component {
 	componentWillUnmount() {
 		window.removeEventListener('resize',this.changeContainer)
 	}
+	
+	handleLink = (type) => {
+    this.props.history.push(`/main/${type}`)
+	}
 
 	render() {
+		const {userList, departmentList} = this.state;
 		return (<div className={style.home_container} ref="home_container" id="home_container">
 			<div className={style.home_container__top}>
 				<ul className={style.home_container__top___container}>
 					<h3 className={style.home_container__top___title}>资源</h3>
-					<li className={style.home_container__top___item} style={{'width': 'calc((100% - 120px) / 3)'}}>
+					<li className={style.home_container__top___item} style={{'width': 'calc((100% - 120px) / 3)'}} onClick={this.handleLink.bind(this, 'user')}>
 						<span className={style.home_container__top___item____title}>
 							用户
 						</span>
 						<span className={style.home_container__top___item____count}>
-						0
+						  {userList.length}
 						</span>
 					</li>
-					<li className={style.home_container__top___item} style={{'width': 'calc((100% - 120px) / 3)'}}>
+					<li className={style.home_container__top___item} style={{'width': 'calc((100% - 120px) / 3)'}} onClick={this.handleLink.bind(this, 'department')}>
 					  <span className={style.home_container__top___item____title}>
 							部门
 						</span>
 						<span className={style.home_container__top___item____count}>
-						0
+						{departmentList.length}
 						</span>
 					</li>
 					<li className={style.home_container__top___item} style={{'width': 'calc((100% - 120px) / 3)'}}>

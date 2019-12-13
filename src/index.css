@@ -201,6 +201,10 @@ li{
   padding: 50px 100px 10px 100px;
 }
 
+.confirm_option_name_item_title{
+  padding-left: 10px;
+}
+
 ::-webkit-scrollbar{
   width: 10px;
   background: #d9d9d9;

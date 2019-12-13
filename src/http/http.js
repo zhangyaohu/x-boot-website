@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { message, Button } from 'antd';
 
 let config = {
 	baseURL: '/api',
@@ -30,10 +29,8 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use((res) => {
 		if (res.data && res.data.status && res.data.status === '500') {
-			message.error('操作失败');
 	    return Promise.resolve(res.data);
 		}else if(res.data && res.data.status && res.data.status === '200') {
-			message.info('操作成功');
 		  return res;
 		}else{
 			return res;

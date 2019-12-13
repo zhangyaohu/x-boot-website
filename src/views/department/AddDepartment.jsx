@@ -4,7 +4,9 @@ import style from './department.less';
 import DepartmentApi from './departmentApi';
 import HttpAPI from '../../http/http';
 import AddDepartmentChildDlg from './components/AddDepartmentChildDlg';
-import { Form, Input, Switch, Button, Select, Icon, Upload, Tree } from 'antd';
+import DeleteDepartmentDlg from './components/DeleteDepartmentDlg';
+import UpdateDepartment from './components/UpdateDepartment';
+import { Form, Input, Switch, Button, Select, Icon, message, Tree } from 'antd';
 
 const TreeNode = Tree.TreeNode;
 const { CreateHeader, CreateBody, CreateFooter } = CreateTemplate;
@@ -17,10 +19,13 @@ class AddDepartment extends Component {
 			treeData: [],
 			checkedKeys: [],
 			selectedKeys: [],
+			selectedList: {},
 			isCheck: true,
+			showDeleteDlg: false,
 			showAddDepartmentChild: false,
 			parentTitle: '',
-			type: ''
+			type: '',
+			checkedList: []
 		}
 	}
 	
@@ -29,12 +34,16 @@ class AddDepartment extends Component {
 	}
 	
 	queryParent = (param) => {
-		DepartmentApi.getParent(param)
-		.then((resp) => {
-       this.setState({
-				treeData: resp.data.data
-			 })
-		})
+		this.setState({
+			treeData: []
+		 }, () => {
+			DepartmentApi.getParent(param)
+			.then((resp) => {
+				 this.setState({
+					treeData: resp.data.data
+				 })
+			})
+		 })
 	}
 	componentDidMount() {
 	  this.queryParent(0);
@@ -70,6 +79,7 @@ class AddDepartment extends Component {
 	}
 
 	renderTreeNodes = (treeData) => {
+		debugger;
 		return treeData.map(item => {
       if (item.children) {
         return (
@@ -84,14 +94,16 @@ class AddDepartment extends Component {
 	
 	handleTreeCheck = (checkedKeys, e) => {
      this.setState({
-			 checkedKeys
+			 checkedKeys,
+			 checkedList: e.checkedNodes
 		 })
 	}
 
 	handleTreeSelect = (selectedKeys, e) => {
 		this.setState({
 			selectedKeys,
-			parentTitle: e.node.props.title
+			parentTitle: e.node.props.title,
+			selectedList: e.node.props
 		})
 	}
 
@@ -103,7 +115,9 @@ class AddDepartment extends Component {
 	}
 
 	handleBatchDelete = () => {
-
+    this.setState({
+			showDeleteDlg: true
+		})
 	}
  
 	handleAddChild = () => {
@@ -116,6 +130,30 @@ class AddDepartment extends Component {
 	handleSwitchChange = (checked) => {
     this.setState({
 			isCheck: checked
+		})
+	}
+
+	handleRefresh = () => {
+		this.queryParent(0)
+	}
+	
+	handleSubmit = () => {
+    this.refs.update.validateFields((err, values) => {
+       if(!err) {
+				 let param = {
+					 'parent_id':values.parent_id,
+					 'sort_order': values.sortOrder,
+					 'status': values.status,
+					 'title': values.title
+				 }
+				 DepartmentApi.updateDepartment(param)
+				  .then(() => {
+						message.info('更新成功');
+						this.props.history.push('/main/department');
+					}).catch(() => {
+						message.error('更新失败');
+					});
+			 }
 		})
 	}
 
@@ -142,29 +180,45 @@ class AddDepartment extends Component {
 								</Button>
               <Button type="danger" 
                       className='x-boot-btn'
-                      onClick={this.handleBatchDelete.bind(this)}>
-                <Icon type="delete"/>
+											onClick={this.handleBatchDelete.bind(this)} 
+											disabled={this.state.checkedKeys.length <=0}>
+                <Icon type="delete" />
                   <span>批量删除部门</span>
               </Button>
 							<Switch defaultChecked = {this.state.isCheck} 
 											onChange={this.handleSwitchChange} 
+											style={{'marginRight': '10px'}}
 											checkedChildren="级联" 
+											className='x-boot-btn'
 											unCheckedChildren="单选"></Switch>
+							<Button type="default" 
+											onClick={this.handleRefresh.bind(this)}>
+                <Icon type="redo" />
+                  <span>刷新</span>
+              </Button>
 						</div>
 						<div className={style.add} style={addStyle}>
 						  <div className={style.add_left}>
-								<Tree checkable 
-								      loadData={this.onLoadData}
-											onCheck={this.handleTreeCheck} 
-											onSelect={this.handleTreeSelect}>
-									{
-										this.renderTreeNodes(treeData)
-									}
-								</Tree>
+								{
+								 this.state.treeData.length ? (
+									<Tree checkable={true}
+										loadData={this.onLoadData}
+										onCheck={this.handleTreeCheck}
+										onSelect={this.handleTreeSelect}
+										showIcon={true}>
+										{this.renderTreeNodes(treeData)}
+									</Tree>
+								) : (
+									  <Icon type="loading" />
+									)}
 							</div>
 							<div className='split-line'></div>
-						  <div className={style.add_right}>right</div>
+						  <div className={style.add_right}>
+							  { /*修改部门*/}
+						    <UpdateDepartment message={this.state.selectedList} ref="update"></UpdateDepartment>
+							</div>
 						</div>
+
 					</CreateBody>
 					<CreateFooter>
 						<Button type="primary" 
@@ -176,8 +230,23 @@ class AddDepartment extends Component {
 				</div>
 
 				<AddDepartmentChildDlg visible={this.state.showAddDepartmentChild} 
-				                       close={() => this.setState({showAddDepartmentChild: false})}
-															 message={{'parentId': this.state.selectedKeys, 'parentTitle': this.state.parentTitle, 'type': this.state.type}}></AddDepartmentChildDlg>
+				                       close={() => {
+																 this.setState({showAddDepartmentChild: false});
+																}}
+															  message={{'parentId': this.state.selectedKeys, 'parentTitle': this.state.parentTitle, 'type': this.state.type}}
+															 ></AddDepartmentChildDlg>
+				
+				<DeleteDepartmentDlg visible={this.state.showDeleteDlg} 
+				                     close={() => {
+															this.setState({showDeleteDlg: false});
+														 }} 
+															 message={
+																{
+																	'checkedKeys': this.state.checkedKeys,
+																	'checkedList': this.state.checkedList
+															   }
+															 }
+															 ></DeleteDepartmentDlg>
 			</div>
 		)
 	}

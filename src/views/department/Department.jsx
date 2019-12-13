@@ -66,7 +66,9 @@ class Department extends Component {
 	 //查询表格数据
 	 queryList = (param) => {
     this.setState({
-      loading: true
+			loading: true,
+			selectedRowKeys: [],
+			selectedRow: [],
     })
     DepartmentApi.getAllDepartment(Object.assign({}, param, {
       sort: `${this.state.sortDirection}${this.state.sortBy}`,

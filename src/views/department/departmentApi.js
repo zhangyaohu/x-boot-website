@@ -21,6 +21,14 @@ let DepartmentApi = {
 
 	addParent: (params) => {
     return HttpAPI.post('/department/add', params);
+	},
+
+	deleteDepartmentTree: (params) => {
+		return HttpAPI.delete(`/department/deletetree`, params)
+	},
+
+	updateDepartment: (params) => {
+		return HttpAPI.put(`/department/update`,  params);
 	}
 }
 

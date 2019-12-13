@@ -4668,8 +4668,8 @@ gauge@~2.7.3:
 
 gbk.js@^0.3.0:
   version "0.3.0"
-  resolved "https://registry.npm.taobao.org/gbk.js/download/gbk.js-0.3.0.tgz#1b62a0a3f137081c213905bfaee1b6abdac861bd"
-  integrity sha1-G2Kgo/E3CBwhOQW/ruG2q9rIYb0=
+  resolved "https://registry.yarnpkg.com/gbk.js/-/gbk.js-0.3.0.tgz#1b62a0a3f137081c213905bfaee1b6abdac861bd"
+  integrity sha512-rFEmSBm7/wSWXI5hq3CC4M55bFapT24Gj2hQfNK2Sy2rBs1snHWUCwRX2dg9jmy/LnR36xm+/ZLhycLWTI4Ilw==
 
 get-caller-file@^1.0.1:
   version "1.0.3"
