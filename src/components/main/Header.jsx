@@ -12,6 +12,23 @@ export default class Header extends Component {
 			this.props.history.push('/login')
 		}
 	}
+	
+	handleFullScreen = (e) => {
+		let isFullScreen = document.fullScreen||document.mozFullScreen||document.webkitIsFullScreen,
+		el = document.body ||document.documentElement;
+		if(!isFullScreen) {
+			(el.requestFullscreen&&el.requestFullscreen())||
+			(el.mozRequestFullScreen&&el.mozRequestFullScreen())||
+			(el.webkitRequestFullscreen&&el.webkitRequestFullscreen())||(el.msRequestFullscreen&&el.msRequestFullscreen());
+		}else {
+			if(document.exitFullscreen )
+			 document.exitFullscreen() 
+			 else if (document.mozCancelFullScreen)
+				document.mozCancelFullScreen() 
+			else  if(document.webkitExitFullscreen)
+			  document.webkitExitFullscreen()
+		}
+	}
 
 	render() {
 		const {history} = this.props;
@@ -35,8 +52,8 @@ export default class Header extends Component {
           <div className={style.header_right__left}></div>
 					<div className={style.header_right__right}>
 						<ul className={style.header_layout}>
-							<li className={style.header_layout__item}>
-						  	<Icon type="fullscreen" />
+							<li className={style.header_layout__item} onClick={this.handleFullScreen}>
+						  	<Icon type="fullscreen" style={{fontSize: '16px', color: '#08c' }}/>
 							</li>
 							<li className={style.header_layout__item}>
 							  <Icon type="global" />
