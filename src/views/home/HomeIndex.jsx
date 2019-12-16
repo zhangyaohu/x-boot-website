@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import style from './home.less';
 import {Timeline} from 'antd';
 import HomeApi from './homeApi';
+import Metric from '../../components/metric/index.jsx';
 
 class HomeIndex extends Component {
 	constructor(props) {
@@ -10,7 +11,12 @@ class HomeIndex extends Component {
 			initClientWidth: 0,
 			initClientHeight: 0,
 			userList: [],
-			departmentList: []
+			departmentList: [],
+			cpuAllUsed: [],
+			diskAllWriteOps: [],
+			networkAllInBytes: [],
+			diskAllReadOps: [],
+			networkAllOutBytes: []
 		}
 	}
 	
@@ -27,6 +33,16 @@ class HomeIndex extends Component {
 				departmentList: resp
 			})
 		});
+		HomeApi.queryMetric()
+		.then((resp) => {
+			this.setState({
+				cpuAllUsed: resp.cpuAllUsed,
+				diskAllWriteOps: resp.diskAllWriteOps,
+				networkAllInBytes: resp.networkAllInBytes,
+				diskAllReadOps: resp.diskAllReadOps,
+				networkAllOutBytes: resp.networkAllOutBytes
+			})
+		})
 	}
   componentDidMount() {
 		this.setState({
@@ -95,17 +111,13 @@ class HomeIndex extends Component {
 							<Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
 							<Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
 						</Timeline>
+						<Metric metric-data={[this.state.networkAllInBytes, this.state.networkAllOutBytes]} type="double" title='总物理机网络吞吐量'></Metric>
 					</div>
 				</div>
 				<div className={style.home_container__bottom___right} style={{"width": "calc((100% - 60px) /  2)"}}>
 				   <div className={style.home_container__bottom___right____container}>
-						<h3 className={style.home_container__bottom___title}>申请进度</h3>
-							<Timeline>
-								<Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-								<Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
-								<Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
-								<Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-							</Timeline>
+						 <Metric  metric-data={this.state.cpuAllUsed} title="cpu使用率"></Metric>
+						 <Metric  metric-data={[this.state.diskAllWriteOps, this.state.diskAllReadOps]} type="double" title="总物理机磁盘IO"></Metric>
 					 </div>
 				</div>
 			</div>
