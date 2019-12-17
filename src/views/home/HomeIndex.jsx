@@ -16,7 +16,8 @@ class HomeIndex extends Component {
 			diskAllWriteOps: [],
 			networkAllInBytes: [],
 			diskAllReadOps: [],
-			networkAllOutBytes: []
+			networkAllOutBytes: [],
+			interval: null
 		}
 	}
 	
@@ -33,6 +34,16 @@ class HomeIndex extends Component {
 				departmentList: resp
 			})
 		});
+		this.queryMetirc();
+		let interval = window.setInterval(() => {
+			this.queryMetirc();
+		}, 5000)
+		this.setState({
+			interval 
+		})
+	}
+
+	queryMetirc = () => {
 		HomeApi.queryMetric()
 		.then((resp) => {
 			this.setState({
@@ -44,12 +55,13 @@ class HomeIndex extends Component {
 			})
 		})
 	}
+
   componentDidMount() {
 		this.setState({
 			initClientWidth:  document.body.clientWidth,
 			initClientHeight:  document.body.clientHeight
 		}, () => {
-      let ratioY = document.body.clientHeight / 960;
+      let ratioY = document.body.clientHeight / this.state.initClientHeight;
 			this.refs.home_container.setAttribute('style', `transform:scale(${1}, ${ratioY});transform-origin: left top 0px;`)
 			window.addEventListener('resize',this.changeContainer)
 		})
@@ -57,11 +69,18 @@ class HomeIndex extends Component {
 	}
 
 	changeContainer = () => {
-		let ratioY = document.body.clientHeight / 960;
+		console.log(this.state.initClientHeight);
+		let ratioY = document.body.clientHeight / this.state.initClientHeight;
 		this.refs.home_container.setAttribute('style', `transform:scale(${1}, ${ratioY});transform-origin: left top 0px;`)
 	}
 
 	componentWillUnmount() {
+		if(this.state.interval) {
+			window.clearInterval(this.state.interval);
+			this.setState({
+				interval: null
+			})
+		}
 		window.removeEventListener('resize',this.changeContainer)
 	}
 	

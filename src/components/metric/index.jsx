@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import style from './metric.less';
-import {formatDateTime } from '../../utils/utils'
+import {formatDateTime, bytesToSize } from '../../utils/utils'
 import echarts from 'echarts';
 import PropTypes from  'prop-types';
 import _ from 'lodash'
@@ -10,7 +10,8 @@ class Metric extends Component{
 		super(props);
 		this.state = {
 			metricData: [],
-			title:""
+			title:"",
+			options: {}
 		}
 	}
 	
@@ -28,14 +29,18 @@ class Metric extends Component{
 			return it.value;
 		})
 		let options = this.getOptions();
-		if(this.props.type !== 'double')
-		 options.series[0].data = data;
+		if(this.props.type !== 'double'){
+			options.series[0].data = data;
+			options.series[0].name = '负载率';
+		}
 		else {
 			options.series[0].data = this.props['metric-data'][0].map(it => {
 				return it.value;
 			});
+			options.series[0].name = this.props.title === '总物理机网络吞吐量' ? '发送' : '写入';
 			options.series.push({
 				'type':'line',
+				name: this.props.title === '总物理机网络吞吐量' ? '接收' : '读取',
 				smooth: true,
 				showSymbol: false,
         data: this.props['metric-data'][1].map(it => {
@@ -44,15 +49,21 @@ class Metric extends Component{
 			})
 		}
 		options.xAxis.data = timeData;
-		let chartContent = echarts.init(this.refs.metric);
-		chartContent.setOption(options)
+	 if(this.refs.metric) {
+			 let chartContent = echarts.init(this.refs.metric);
+			 this.setState({
+				 options: options
+			 }, () => {
+				chartContent.setOption(this.state.options, true)
+			 })
+	 }
 	}
 	
 	format = (param) => {
-    if(param.length ===1 ) {
-			return Math.round(param[0].value * 100) / 100 + '%'
-		}else if(this.props.title === '总物理机网络吞吐量'){
-      return 5 + 'k'
+    if(this.props.title === 'cpu使用率') {
+			return Math.round(param.value * 100) / 100 + '%'
+		}else if(this.props.title === '总物理机网络吞吐量' || this.props.title === '总物理机磁盘IO'){
+      return bytesToSize(param.value);
 		}
 	}
 	getOptions = () => {
@@ -73,16 +84,20 @@ class Metric extends Component{
 						color:'#333',
 					},
 					formatter:(data)=> {
-					 return `<div style="background: #fff;padding: 10px 20px;box-shadow: 1px 1px 6px #f6f6f6, -1px -1px 6px #f6f6f6;">
-						 <div style="display: flex;">
-							 <div style="flex: 1 1 auto;padding-right: 30px;">名称</div>
-							 <div style="flex: 1 1 auto;" ></div>
-						 </div>
-						 <div style="display:flex;just-content: space-between;">
-						   <div style="flex: 1 1 auto;padding-right: 30px;">值</div>
-						   <div style="flex: 1 1 auto;" >${this.format(data)}</div>
-						 </div>
-					 </div>`
+						let date = formatDateTime(new Date().getTime(), 'yyyy-MM-dd');
+						let str = `<div style="background: #fff;padding: 10px 20px;box-shadow: 1px 1px 6px #f6f6f6, -1px -1px 6px #f6f6f6;">
+						   <div>${date + ' ' + data[0].axisValue}</div>`
+					 data.forEach((item, index) => {
+							str += `
+								<div style="display:block;just-content: space-between;">
+									<div style="display:inline-block;width: 10px; height: 10px; borderRadius: 100%; backgroundColor:${this.state.options.color[index]}"></div>
+									<div style="display:inline-block;">${item.seriesName}</div>
+									<div style="display:inline-block;" >${this.format(item)}</div>
+								</div>
+							`
+					 })
+					 str +='</div>'
+					 return  str;
 					}
 				},
 				xAxis: {
@@ -134,21 +149,46 @@ class Metric extends Component{
 
 	componentDidUpdate(prevProps) {
 		if(_.isEqual(prevProps['metric-data'], this.props['metric-data'])) return;
-		this.init();
+		if(this.refs.metric) this.init();
 	}
 
 	componentDidMount() {
 		window.addEventListener('resize',() => {
-			this.init();
+			if(this.refs.metric) {
+				let chartContent = echarts.init(this.refs.metric);
+				 chartContent.resize()
+			 }
 		})
 	}
-
+	
+	componentWillUnmount() {
+		window.removeEventListener('resize',() => {
+			if(this.refs.metric) {
+				let chartContent = echarts.init(this.refs.metric);
+				 chartContent.resize()
+			 }
+		})
+	}
+	
+	
 	render () {
 		return (
 			<div className={style.metric_container}>
 	      <div className={style.metric_title}>{this.props.title}</div>
 				<div className={style.metric_lengend}>
-					<div style={{'backgroundColor': '#369'}}></div>
+					{
+						this.props.type === 'double' ?
+						 <div style={{'padding': '0px 10px'}}>
+              <div  style={{'display': 'inline-block', 'marginRight': '50px'}}>
+								<span style={{'display': 'inline-block', 'marginRight': '20px', 'width': '6px', 'height': '6px', 'borderRadius': '100%', 'backgroundColor': '#007FDF'}}></span>
+								<span>{this.props.title === '总物理机网络吞吐量' ? '发送' : '写入'}</span>
+							</div>
+							<div style={{'display': 'inline-block', 'marginRight': '50px'}}>
+								<span style={{'display': 'inline-block', 'marginRight': '20px', 'width': '6px', 'height': '6px', 'borderRadius': '100%', 'backgroundColor': '#007FDF'}}></span>
+								<span>{this.props.title === '总物理机网络吞吐量' ? '接收' : '读取'}</span>
+							</div>
+						</div> : null
+					}
 				</div>
 				<div className={[style.metric_content, 'metric_main'].join(' ')} 
 				     ref="metric"
