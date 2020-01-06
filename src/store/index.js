@@ -1,12 +1,11 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import reducers from './reducers/index.js';
-import userReducers from './reducers/userReducers';
-import departmentReducers from './reducers/departmentReducers';
-import thunk from 'redux-thunk'
+import thunk from 'redux-thunk';
+import promiseMiddleware from 'redux-promise';
 
 
-let reducer = combineReducers(reducers,userReducers, departmentReducers)
+let reducer = combineReducers(reducers)
 export default function configureStore(initialState={}) {
-	const store = createStore(reducer, initialState,applyMiddleware(thunk));
+	const store = createStore(reducer, initialState,applyMiddleware(thunk, promiseMiddleware));
 	return store;
 }

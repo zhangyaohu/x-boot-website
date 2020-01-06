@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import { Button, Icon, Dropdown, Menu, Input, Table, Pagination} from 'antd';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import DepartmentApi from './departmentApi';
-import DepartmentAction from '../../store/actions/departmentAction';
+import dbAction from '../../store/actions/dbAction';
 import { formatDateTime } from '../../utils/utils';
 import Dialog from '../../components/modal/Modal';
 import style from './department.less'
@@ -76,15 +77,22 @@ class Department extends Component {
       pageIndex: this.state.pageIndex
     }))
     .then((resp) => {
-			this.props.queryDepartmentList(resp.data);
-			this.props.departmentData.data.forEach(it => {
+			this.props.queryDepartmentList({
+				tableName: 'department',
+				list: resp.data.data
+			}).then(() => {
+				console.log('============');
+			})
+			debugger;
+			this.props.departmentData.forEach(it => {
 				DepartmentApi.getParent(it.parent_id)
 				.then((parentResp) => {
 					it.parent_id = parentResp.data.data[0].title
 				})
 				.then(() => {
+					debugger;
 					this.setState({
-						departmentData: this.props.departmentData.data,
+						departmentData: this.props.departmentData,
 						total:  this.props.departmentData.total,
 						loading: false,
 						selectedRowKeys: [],
@@ -285,13 +293,22 @@ class Department extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		departmentData: state.departmentReducers
+		departmentData: state.dbObject.department
 	}
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-		queryDepartmentList:  (payload) => dispatch(DepartmentAction.query_department_list(payload))
+	return {
+    queryDepartmentList: function() {
+			var active= function () {
+        return new Promise((resolve, reject) => {
+					setTimeout(() => {
+						resolve(dbAction.UPDATE_DB_OBJ)
+					}, 500)
+				})
+			},
+			dispatch(active());
+		}
 	}
 }
 
