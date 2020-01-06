@@ -6,7 +6,7 @@ import  SerchBox from '../../components/searchbox/SearchBox';
 import { show_create_detail } from '../../store/actions/menuAction';
 import UserApi from './UserApi';
 import { connect } from "react-redux";
-import userAction from '../../store/actions/userAction';
+import dbAction from '../../store/actions/dbAction';
 import {formatDateTime, downFile} from '../../utils/utils';
 import Dialog from '../../components/modal/Modal';
 import ResetPasswordDlg from './components/ResetPasswordDlg';
@@ -217,7 +217,6 @@ class User extends Component {
     }
     UserApi.updateStatus(updateParam)
     .then((resp) => {
-       this.props.updateStatus(resp.data);
        this.queryList();
     })
   }
@@ -236,10 +235,13 @@ class User extends Component {
       pageIndex: this.state.pageIndex
     }))
     .then((resp) => {
-      this.props.queryUserList(resp.data);
+      this.props.queryUserList({
+        tableName: 'userList',
+        list: resp.data.data
+      });
       this.setState({
-        userData: this.props.userData.data,
-        total:  this.props.userData.total,
+        userData: this.props.userData,
+        total:  resp.data.total,
         loading: false,
         selectedRowKeys: [],
       })
@@ -279,7 +281,6 @@ class User extends Component {
       this.setState({
         visible: false
       })
-      this.props.deleteUser(resp.data);
       this.queryList();
     })
   }
@@ -430,22 +431,19 @@ class User extends Component {
 }
 
 User.propTypes = {
-  userData: PropTypes.object,
+  userData: PropTypes.array,
   queryUserList: PropTypes.func
 }
 
 const mapStateToProps = (state) => {
   return {
-   userData: state.userData,
+   userData: state.dbObject.userList,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    queryUserList: (payload) => dispatch(userAction.query_user_list(payload)),
-    deleteUser: (payload) => dispatch(userAction.user_delete(payload)),
-    updateStatus: (payload) => dispatch(userAction.user_update_status(payload)),
-    setCreateOrDetail: (payload) => dispatch(show_create_detail(payload))
+    queryUserList: (payload) => dispatch(dbAction.UPDATE_DB_OBJ(payload)),
   }
 }
 

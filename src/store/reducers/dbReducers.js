@@ -1,14 +1,13 @@
 import * as types from '../mutations-types';
 let initialState = {
-	department: []
+	department: [],
+	userList: []
 }
 
 const dbReducers = (state = initialState, action) => {
 	switch (action.type) {
 		case types.UPDATE_DB_OBJ:
-			if (!state[action.payload.tableName]) state[action.payload.tableName] = {}
-			Object.assign(state, {[action.payload.tableName]: [...action.payload.list]});
-			return state;
+		return {...state, [action.payload.tableName]: [...action.payload.list]}
 		default: 
 		  return state;
 	}

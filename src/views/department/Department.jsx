@@ -80,25 +80,21 @@ class Department extends Component {
 			this.props.queryDepartmentList({
 				tableName: 'department',
 				list: resp.data.data
-			}).then(() => {
-				console.log('============');
 			})
-			debugger;
-			this.props.departmentData.forEach(it => {
-				DepartmentApi.getParent(it.parent_id)
-				.then((parentResp) => {
-					it.parent_id = parentResp.data.data[0].title
-				})
-				.then(() => {
-					debugger;
-					this.setState({
-						departmentData: this.props.departmentData,
-						total:  this.props.departmentData.total,
-						loading: false,
-						selectedRowKeys: [],
+				this.props.departmentData.forEach(it => {
+					DepartmentApi.getParent(it.parent_id)
+					.then((parentResp) => {
+						it.parent_id = parentResp.data.data[0].title
+					})
+					.then(() => {
+						this.setState({
+							departmentData: this.props.departmentData,
+							total:  this.props.departmentData.total,
+							loading: false,
+							selectedRowKeys: [],
+						})
 					})
 				})
-			})
     })
 	}
 	
@@ -299,17 +295,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-    queryDepartmentList: function() {
-			var active= function () {
-        return new Promise((resolve, reject) => {
-					setTimeout(() => {
-						resolve(dbAction.UPDATE_DB_OBJ)
-					}, 500)
-				})
-			},
-			dispatch(active());
+    queryDepartmentList: (payload) => {
+				dispatch(dbAction.UPDATE_DB_OBJ(payload))
+			}
 		}
-	}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Department)
