@@ -1,3 +1,10 @@
+## 项目截图
+![首页监控](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/home-monitor.png)
+![用户列表](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-user-list.png)
+![添加部门](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-department-01.png)
+![部门管理列表](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/department-manage.png)
+![添加部门](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-department.png)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -26,11 +33,3 @@ https://github.com/zhangyaohu/koa_mysql_x-boot.git;
 运行时yarn install 添加依赖;
 然后yarn start即可运行后端项目
 3、在运行之前需导入xboot.sql文件
-
-
-## 项目截图
-![首页监控](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/home-monitor.png);
-![用户列表](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-user-list.png);
-![添加部门](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-department-01.png);
-![部门管理列表](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/department-manage.png);
-![添加部门](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-department.png);
