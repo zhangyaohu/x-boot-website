@@ -16,6 +16,7 @@ export default class HomeRoute extends Component {
     const {match, history} = this.props;
     return (
       <Switch>
+        {/*主页面路由*/}
           <Route path={`${match.path}/home`} component={HomeIndex}/>
           <Route path={`${match.path}/department`} component={Department} match={match} history={history}></Route>
           <Route path={`${match.path}/user`} component={User} match={match} history={history}></Route>

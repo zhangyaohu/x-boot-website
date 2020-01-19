@@ -29,8 +29,8 @@ https://github.com/zhangyaohu/koa_mysql_x-boot.git;
 
 
 ## 项目截图
-![首页监控](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/home-monitor.png)
-![用户列表](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-user-list.png)
-![添加部门](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-department-01.png)
-![部门管理列表](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/department-manage.png)
-![添加部门](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-department.png)
+![首页监控](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/home-monitor.png);
+![用户列表](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-user-list.png);
+![添加部门](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-department-01.png);
+![部门管理列表](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/department-manage.png);
+![添加部门](https://github.com/zhangyaohu/x-boot-website/tree/master/src/image/add-department.png);

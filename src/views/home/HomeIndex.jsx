@@ -90,6 +90,7 @@ class HomeIndex extends Component {
 
 	render() {
 		const {userList, departmentList} = this.state;
+		{/*首页展示*/}
 		return (<div className={style.home_container} ref="home_container" id="home_container">
 			<div className={style.home_container__top}>
 				<ul className={style.home_container__top___container}>
@@ -124,6 +125,7 @@ class HomeIndex extends Component {
 				<div className={style.home_container__bottom___left} style={{"width": "calc((100% - 60px) /  2)"}}>
 				  <div className={style.home_container__bottom___left____container}>
 						<h3 className={style.home_container__bottom___title}>申请进度</h3>
+						{/*时间轴*/}
 						<Timeline>
 							<Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
 							<Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
@@ -135,7 +137,9 @@ class HomeIndex extends Component {
 				</div>
 				<div className={style.home_container__bottom___right} style={{"width": "calc((100% - 60px) /  2)"}}>
 				   <div className={style.home_container__bottom___right____container}>
+						 	{/*画图组件次数据是个假数据*/}
 						 <Metric  metric-data={this.state.cpuAllUsed} title="cpu使用率"></Metric>
+						 	 	{/*画图组件次数据是个假数据*/}
 						 <Metric  metric-data={[this.state.diskAllWriteOps, this.state.diskAllReadOps]} type="double" title="总物理机磁盘IO"></Metric>
 					 </div>
 				</div>
